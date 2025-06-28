@@ -1,0 +1,52 @@
+<div class="form-container">
+  <form [formGroup]="reimbursementForm" (ngSubmit)="onSubmit()" class="reimbursement-form">
+    <h2>Demande de remboursement</h2>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="nom" placeholder="Votre nom">
+      <mat-error *ngIf="reimbursementForm.get('nom')?.hasError('required')">
+        Le nom est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Motif</mat-label>
+      <input matInput formControlName="motif" placeholder="Motif du remboursement">
+      <mat-error *ngIf="reimbursementForm.get('motif')?.hasError('required')">
+        Le motif est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Montant</mat-label>
+      <input matInput type="number" formControlName="montant" placeholder="Montant en euros">
+      <mat-error *ngIf="reimbursementForm.get('montant')?.hasError('required')">
+        Le montant est requis
+      </mat-error>
+      <mat-error *ngIf="reimbursementForm.get('montant')?.hasError('min')">
+        Le montant doit être positif
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Lieu</mat-label>
+      <input matInput formControlName="lieu" placeholder="Lieu du déplacement">
+      <mat-error *ngIf="reimbursementForm.get('lieu')?.hasError('required')">
+        Le lieu est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Justificatif</mat-label>
+      <input matInput formControlName="justificatif" placeholder="URL ou référence du justificatif">
+      <mat-error *ngIf="reimbursementForm.get('justificatif')?.hasError('required')">
+        Le justificatif est requis
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!reimbursementForm.valid">
+      Envoyer la demande
+    </button>
+  </form>
+</div>
