@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { HttpClient } from '@angular/common/http';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatError } from '@angular/material/form-field';
+import { ReimbursementService } from '../services/reimbursement';
 
 @Component({
   selector: 'app-reimbursement-form',
@@ -16,6 +17,7 @@ import { MatError } from '@angular/material/form-field';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatError
   ],
   templateUrl: './reimbursement-form.html',
@@ -23,10 +25,12 @@ import { MatError } from '@angular/material/form-field';
 })
 export class ReimbursementFormComponent {
   reimbursementForm: FormGroup;
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient
+    private reimbursementService: ReimbursementService,
+    private snackBar: MatSnackBar
   ) {
     this.reimbursementForm = this.fb.group({
       nom: ['', Validators.required],
@@ -38,15 +42,30 @@ export class ReimbursementFormComponent {
   }
 
   onSubmit() {
-    if (this.reimbursementForm.valid) {
-      this.http.post('/api/reimbursements', this.reimbursementForm.value)
+    if (this.reimbursementForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+      
+      this.reimbursementService.createReimbursement(this.reimbursementForm.value)
         .subscribe({
-          next: (response: any) => {
+          next: (response) => {
             console.log('Remboursement envoyé avec succès', response);
+            this.snackBar.open('Demande de remboursement envoyée avec succès', 'Fermer', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
             this.reimbursementForm.reset();
           },
-          error: (error: any) => {
+          error: (error) => {
             console.error('Erreur lors de l\'envoi', error);
+            this.snackBar.open('Erreur lors de l\'envoi de la demande', 'Fermer', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
+          },
+          complete: () => {
+            this.isSubmitting = false;
           }
         });
     }

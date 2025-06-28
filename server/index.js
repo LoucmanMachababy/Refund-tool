@@ -15,10 +15,30 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// MongoDB Connection Options
+const mongoOptions = {
+  retryWrites: true,
+  w: 'majority'
+};
+
 // Connexion à MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/salomon-refund')
-  .then(() => console.log('Connecté à MongoDB'))
-  .catch(err => console.error('Erreur de connexion à MongoDB:', err));
+mongoose.connect(process.env.MONGODB_URI, mongoOptions)
+  .then(() => {
+    console.log('Successfully connected to MongoDB Atlas');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  });
+
+// Error handling middleware
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
 
 // Routes
 app.post('/api/reimbursements', async (req, res) => {

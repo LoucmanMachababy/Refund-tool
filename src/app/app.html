@@ -181,12 +181,18 @@
   }
 </style>
 
-<main class="main">
-  <div class="container">
-    <h1>{{ title }}</h1>
-    <app-reimbursement-form></app-reimbursement-form>
-  </div>
-</main>
+<!-- Barre de navigation -->
+<mat-toolbar color="primary">
+  <span>Salomon Refund</span>
+  <span class="spacer"></span>
+  <button mat-button [routerLink]="['/list']">Liste des remboursements</button>
+  <button mat-raised-button color="accent" [routerLink]="['/new']">Nouveau remboursement</button>
+</mat-toolbar>
+
+<!-- Contenu principal -->
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
@@ -195,6 +201,3 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-
-<router-outlet />
